@@ -1,7 +1,8 @@
 import os
 
-from flask import Flask
+from flask import Flask, request
 from mongoengine import connect
+from controllers import *
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -20,7 +21,10 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    @app.route('/')
-    def home():
-        return 'hello world'
+    @app.route('/register', methods=['POST'])
+    def register():
+        try:
+            return register_user(app, request.form)
+        except Exception as e:
+            return e.message, 500
     return app
