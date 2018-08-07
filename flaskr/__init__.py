@@ -1,13 +1,15 @@
 import os
 
-from flask import flask
+from flask import Flask
+from mongoengine import connect
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     # app.config.from_mapping(
 
     # )
-
+    connect('flask-simple-api')
+    print('database connected')
     if test_config is None:
         app.config.from_pyfile('config.py', silent=True)
     else:
@@ -17,3 +19,8 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
+
+    @app.route('/')
+    def home():
+        return 'hello world'
+    return app
